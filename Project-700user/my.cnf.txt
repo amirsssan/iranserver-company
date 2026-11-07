@@ -1,0 +1,109 @@
+[mysqld]
+
+# ==========================================================
+# GENERAL & NETWORK
+# ==========================================================
+log-error = /var/log/mysql.log
+default_storage_engine = InnoDB
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+skip-name-resolve
+
+max_allowed_packet = 256M
+back_log = 2048
+
+# کاهش اتصال‌های معلق روی هاست اشتراکی
+max_connections = 800
+max_user_connections = 30
+connect_timeout = 10
+interactive_timeout = 30
+wait_timeout = 30
+
+# ==========================================================
+# INNODB (Calculated for 245GB RAM / 53 Cores)
+# ==========================================================
+# تخصیص حدود ۶۰٪ رم به بافر پول جهت حفظ ایمنی سیستم‌عامل و سایر پروسه‌ها
+innodb_buffer_pool_size = 148G
+innodb_buffer_pool_instances = 32
+
+innodb_file_per_table = 1
+innodb_flush_method = O_DIRECT
+
+# تنظیم روی 2 برای بهبود چشمگیر سرعت دیسک در هاست اشتراکی (ریسک بسیار پایین)
+innodb_flush_log_at_trx_commit = 2
+
+innodb_log_file_size = 2G
+innodb_log_buffer_size = 64M
+
+innodb_read_io_threads = 16
+innodb_write_io_threads = 16
+
+# اگر دیسک شما NVMe است این مقادیر مناسب هستند
+innodb_io_capacity = 10000
+innodb_io_capacity_max = 20000
+
+innodb_purge_threads = 8
+innodb_flush_neighbors = 0
+
+# ==========================================================
+# THREADS & PER-CONNECTION BUFFERS (Optimized to prevent OOM)
+# ==========================================================
+thread_cache_size = 128
+thread_stack = 256K
+
+# مقادیر بافرها بهینه‌شده تا ضرب‌در max_connections باعث کمبود رم نشوند
+read_buffer_size = 256K
+read_rnd_buffer_size = 512K
+sort_buffer_size = 512K
+join_buffer_size = 512K
+
+key_buffer_size = 128M
+myisam_sort_buffer_size = 32M
+
+# ==========================================================
+# TABLE CACHE & LIMITS (Scalable for 700 Shared Hosts)
+# ==========================================================
+table_open_cache = 80000
+table_definition_cache = 50000
+table_open_cache_instances = 16
+
+open_files_limit = 200000
+
+# ==========================================================
+# TEMP TABLES & QUERY CACHE
+# ==========================================================
+tmp_table_size = 64M
+max_heap_table_size = 64M
+
+query_cache_type = 0
+query_cache_size = 0
+
+# ==========================================================
+# SLOW QUERY LOG
+# ==========================================================
+slow_query_log = 1
+slow_query_log_file = /var/log/mysql-slow.log
+long_query_time = 2
+log_queries_not_using_indexes = 0
+
+# ==========================================================
+# BINARY LOG
+# ==========================================================
+server_id = 1
+binlog_format = ROW
+max_binlog_size = 256M
+sync_binlog = 0
+
+[myisamchk]
+read_buffer_size = 8M
+write_buffer_size = 8M
+key_buffer_size = 128M
+sort_buffer_size = 8M
+myisam_sort_buffer_size = 256M
+ft_min_word_len = 2
+
+[mysqldump]
+quick
+max_allowed_packet = 256M
+
+!includedir /etc/my.cnf.d
