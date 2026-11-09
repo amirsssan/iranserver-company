@@ -25,5 +25,5 @@ SHOW GLOBAL STATUS LIKE 'Open_tables';
 SHOW GLOBAL STATUS LIKE 'Opened_table_definitions';
 SHOW GLOBAL STATUS LIKE 'Open_table_definitions';
 
-ایجاد جداول موقت روی دیسک (Created_tmp_disk_tables):
+-- ایجاد جداول موقت روی دیسک (Created_tmp_disk_tables):
 SHOW GLOBAL STATUS LIKE 'Created_tmp_disk_tables';

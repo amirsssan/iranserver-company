@@ -1,11 +1,25 @@
-readme.html
-#Check license and Buy
+# Runbook: Kernel Switch with `keep_newkernel.sh`
+
+Applies to RHEL 9 / CloudLinux 9 servers (TuxCare / KernelCare context).
+
+## 1. Prepare
+
+```bash
+# Check the license and buy if needed (readme.html), then:
 update_cloudv2
 
-yum update -y 
+yum update -y
+```
 
-after execute the script : 
-OUTPUT should be : 
+## 2. Run the script
+
+```bash
+sudo ./keep_newkernel.sh
+```
+
+## 3. Expected final output
+
+```text
 ==============================================
 FINAL KERNEL STATUS
 ==============================================
@@ -42,10 +56,29 @@ kernel="/boot/vmlinuz-0-rescue-16a26683f1414abeaccb2e561be7fc07"
 
 Default kernel:
 /boot/vmlinuz-5.14.0-687.39.1.el9_8.x86_64
-==========================================================
-#execute
-reboot 
-#check the cagefsctl if it works then set default kernel 
+```
 
-Then last Kernel : 
+## 4. Reboot and verify
+
+```bash
+reboot
+```
+
+After the server is back, check that `cagefsctl` works with the new kernel.
+
+## 5. Make the new kernel the permanent default
+
+Only after the check above passed:
+
+```bash
 grubby --set-default=/boot/vmlinuz-5.14.0-687.39.1.el9_8.x86_64
+```
+
+## Checklist
+
+- [ ] License checked, `update_cloudv2` and `yum update -y` done
+- [ ] Console access (KVM / IPMI) available
+- [ ] Script output matches the expected output
+- [ ] Rebooted and `uname -r` shows the new kernel
+- [ ] `cagefsctl` works
+- [ ] Default kernel set with `grubby`
